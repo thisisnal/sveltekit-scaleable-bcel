@@ -14,10 +14,13 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
-  name: string
+  fullname: string
+  username: string
   email: string
   password: string
   confirmPassword: string
+  tel?: string
+  role?: "user" | "admin"
 }
 
 export interface AuthResponse {

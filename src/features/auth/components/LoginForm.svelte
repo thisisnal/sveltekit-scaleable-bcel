@@ -1,5 +1,16 @@
 <script lang="ts">
+  import Swal from "sweetalert2"
   import { authService } from "../services/authService"
+
+  // SweetAlert2 for notifications
+  function showAlert(title: string, text: string, icon: "success" | "error") {
+    Swal.fire({
+      title,
+      text,
+      icon,
+      confirmButtonText: "OK",
+    })
+  }
 
   // Funcion to handle form submission
   async function handleSubmit(event: SubmitEvent) {
@@ -11,10 +22,31 @@
         email: formData.get("email") as string,
         password: formData.get("password") as string,
       })
-      console.log("Login successful:", response)
+      // console.log("Login successful:", response)
+      if (response.success) {
+        // Show success alert
+        showAlert(
+          "Login Successful",
+          "You have successfully logged in.",
+          "success"
+        )
+        // Redirect or show success message
+      } else {
+        // Handle unsuccessful login
+        showAlert(
+          "Login Failed",
+          "Please check your email and password.",
+          "error"
+        )
+      }
       // Redirect or show success message
     } catch (error) {
-      console.error("Login failed:", error)
+      // console.error("Login failed:", error)
+      showAlert(
+        "Login Failed",
+        "Please check your email and password.",
+        "error"
+      )
       // Handle error, e.g., show error message
     }
   }

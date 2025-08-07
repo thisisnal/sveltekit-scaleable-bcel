@@ -20,7 +20,7 @@ export interface RegisterData {
   password: string
   confirmPassword: string
   tel?: string
-  role?: "user" | "admin"
+  role?: 1 | 2 // 1 for user, 2 for admin
 }
 
 export interface AuthResponse {

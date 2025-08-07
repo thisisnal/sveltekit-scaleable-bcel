@@ -40,7 +40,7 @@
       password: password,
       confirmPassword: passwordConfirmation,
       tel: formData.get("tel") as string,
-      role: "user", // Default to 'user' if not specifid
+      role: 1, // Default to 'user' if not specifid
     }
 
     // Call the authService to handle registration

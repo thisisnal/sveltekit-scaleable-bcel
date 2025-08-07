@@ -39,8 +39,6 @@ class ApiService {
         if (browser) {
           localStorage.removeItem("token")
           localStorage.removeItem("user")
-          // อาจจะต้อง redirect ไปยังหน้า login ด้วย
-          window.location.href = "/login"
         }
         throw new Error("Unauthorized access. Please log in again.")
       }

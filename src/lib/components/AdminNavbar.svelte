@@ -8,10 +8,6 @@
 
   const logout = async () => {
     await authService.logout()
-    if (browser) {
-      localStorage.removeItem("user")
-      localStorage.removeItem("token")
-    }
     window.location.href = "/login"
   }
 

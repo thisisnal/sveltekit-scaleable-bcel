@@ -18,7 +18,7 @@ export interface RegisterData {
   username: string
   email: string
   password: string
-  confirmPassword: string
+  password_confirmation: string
   tel?: string
   role?: 1 | 2 // 1 for user, 2 for admin
 }

@@ -31,6 +31,9 @@
           "success"
         )
         // Redirect or show success message
+        setTimeout(() => {
+          window.location.href = "/admin/dashboard" // Redirect to dashboard or home page
+        }, 2000)
       } else {
         // Handle unsuccessful login
         showAlert(

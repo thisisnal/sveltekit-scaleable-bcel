@@ -38,7 +38,7 @@
       username: formData.get("username") as string,
       email: formData.get("email") as string,
       password: password,
-      confirmPassword: passwordConfirmation,
+      password_confirmation: passwordConfirmation,
       tel: formData.get("tel") as string,
       role: 1, // Default to 'user' if not specifid
     }

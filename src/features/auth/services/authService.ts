@@ -29,6 +29,13 @@ class AuthService {
   async register(data: RegisterData) {
     return await apiService.post<AuthResponse>("/register", data)
   }
+
+  // Logout method to clear user session
+  async logout() {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    return await apiService.post("/logout")
+  }
 }
 
 export const authService = new AuthService()

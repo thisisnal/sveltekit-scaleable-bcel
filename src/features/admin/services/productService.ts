@@ -11,11 +11,29 @@ class ProductService {
         endpoint += `&search=${encodeURIComponent(search.trim())}`
       }
 
+      console.log("ProductService: Making API call to", endpoint)
       const response = await apiService.get<ProductResponse>(endpoint)
-      return response.data
+      console.log("ProductService: API response", response)
+
+      if (response.success) {
+        return response.data
+      } else {
+        console.error("ProductService: API returned error", response.error)
+        return {
+          status: false,
+          total: 0,
+          products: [],
+          message: response.error || "Failed to fetch products",
+        }
+      }
     } catch (error) {
-      console.error("Error fetching products:", error)
-      throw error
+      console.error("ProductService: Exception in getProducts:", error)
+      return {
+        status: false,
+        total: 0,
+        products: [],
+        message: error instanceof Error ? error.message : "Unknown error",
+      }
     }
   }
 

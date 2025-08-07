@@ -4,45 +4,98 @@
   import type { Product } from "$lib/types/product"
 
   let products: Product[] = []
-  let loading = true
+  let loading = false
   let error: string | null = null
   let searchTerm = ""
   let currentPage = 1
   let totalProducts = 0
+  let mounted = false
+  let abortController: AbortController | null = null
 
-  const fetchProducts = async (page = 1, search = "") => {
+  const fetchProducts = async (page = 1, search = "", force = false) => {
+    // Hard stop for infinity loop protection
+    if (loading && !force) {
+      console.log("🚫 BLOCKED: Already loading, aborting call")
+      return
+    }
+
+    // Cancel previous request
+    if (abortController) {
+      abortController.abort()
+    }
+    abortController = new AbortController()
+
+    // Additional protection
+    if (!mounted && !force) {
+      console.log("🚫 BLOCKED: Component not mounted yet")
+      return
+    }
+
+    const callId = Math.random().toString(36).substr(2, 9)
+    console.log(`🚀 START[${callId}]: Fetching products`, { page, search })
+
     try {
       loading = true
       error = null
 
       const result = await productService.getProducts(page, search)
+      console.log(`📥 RESULT[${callId}]:`, result)
+
+      // Check if request was aborted
+      if (abortController.signal.aborted) {
+        console.log(`❌ ABORTED[${callId}]: Request was cancelled`)
+        return
+      }
 
       if (result && result.status) {
         products = result.products || []
         totalProducts = result.total || 0
+        console.log(`✅ SUCCESS[${callId}]: Loaded ${products.length} products`)
+      } else if (result && Array.isArray(result)) {
+        products = result
+        totalProducts = result.length
+        console.log(
+          `✅ SUCCESS[${callId}]: Loaded array ${products.length} products`
+        )
       } else {
         products = []
         totalProducts = 0
         error = "ไม่สามารถดึงข้อมูลสินค้าได้"
+        console.log(`⚠️ EMPTY[${callId}]: No valid data`)
       }
     } catch (err) {
-      console.error("Error fetching products:", err)
-      error = "เกิดข้อผิดพลาดในการดึงข้อมูลสินค้า"
-      products = []
-      totalProducts = 0
+      console.error(`❌ ERROR[${callId}]:`, err)
+      if (!abortController.signal.aborted) {
+        error = "เกิดข้อผิดพลาดในการดึงข้อมูลสินค้า"
+        products = []
+        totalProducts = 0
+      }
     } finally {
-      loading = false
+      if (!abortController.signal.aborted) {
+        loading = false
+        console.log(`🏁 END[${callId}]: Loading set to false`)
+      }
     }
   }
 
   const handleSearch = () => {
+    console.log("🔍 Search triggered")
+    if (loading) {
+      console.log("🚫 BLOCKED: Search blocked due to loading")
+      return
+    }
     currentPage = 1
-    fetchProducts(currentPage, searchTerm)
+    fetchProducts(currentPage, searchTerm, true) // force = true
   }
 
   const handlePageChange = (page: number) => {
+    console.log("📄 Page change triggered:", page)
+    if (loading) {
+      console.log("🚫 BLOCKED: Page change blocked due to loading")
+      return
+    }
     currentPage = page
-    fetchProducts(currentPage, searchTerm)
+    fetchProducts(currentPage, searchTerm, true) // force = true
   }
 
   const formatPrice = (price: number) => {
@@ -56,8 +109,20 @@
     return new Date(dateString).toLocaleDateString("th-TH")
   }
 
+  let imageErrors = new Set() // Track failed images
+
+  const handleImageError = (productId: number, event: Event) => {
+    imageErrors.add(productId)
+    imageErrors = imageErrors // Trigger reactivity
+  }
+
   onMount(() => {
-    fetchProducts()
+    console.log("🎬 Component mounted")
+    mounted = true
+    // Add delay to ensure component is fully mounted
+    setTimeout(() => {
+      fetchProducts(1, "", true) // force = true for initial load
+    }, 100)
   })
 </script>
 
@@ -118,10 +183,11 @@
       </svg>
       <p class="text-red-700 text-lg font-medium">{error}</p>
       <button
-        on:click={() => fetchProducts(currentPage, searchTerm)}
+        on:click={() => fetchProducts(currentPage, searchTerm, true)}
         class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+        disabled={loading}
       >
-        ลองใหม่อีกครั้ง
+        {loading ? "กำลังโหลด..." : "ลองใหม่อีกครั้ง"}
       </button>
     </div>
 
@@ -174,16 +240,33 @@
             {#each products as product (product.id)}
               <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <img
-                    src={product.image || "/placeholder-image.jpg"}
-                    alt={product.name}
-                    class="h-16 w-16 object-cover rounded-lg"
-                    on:error={(e) => {
-                      if (e.target)
-                        (e.target as HTMLImageElement).src =
-                          "/placeholder-image.jpg"
-                    }}
-                  />
+                  <div
+                    class="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center relative overflow-hidden"
+                  >
+                    {#if product.image && !imageErrors.has(product.id)}
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        class="h-16 w-16 object-cover rounded-lg absolute inset-0"
+                        on:error={(e) => handleImageError(product.id, e)}
+                      />
+                    {:else}
+                      <!-- Fallback icon when no image or error -->
+                      <svg
+                        class="w-8 h-8 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        />
+                      </svg>
+                    {/if}
+                  </div>
                 </td>
                 <td class="px-6 py-4">
                   <div class="text-sm font-medium text-gray-900">

@@ -1,4 +1,10 @@
-<footer class="bg-gray-100 p-4 text-center">
-  <p class="text-sm text-gray-600">&copy; 2025 Your Company</p>
-  <p class="text-sm text-gray-600">All rights reserved.</p>
+<footer
+  class="bg-gray-100 border-t border-gray-200 h-14 flex items-center justify-center px-4"
+>
+  <div
+    class="w-full mx-auto flex items-center justify-between text-sm text-gray-600"
+  >
+    <p>&copy; 2025 Your Company. All rights reserved.</p>
+    <p class="hidden sm:block">Built with SvelteKit</p>
+  </div>
 </footer>

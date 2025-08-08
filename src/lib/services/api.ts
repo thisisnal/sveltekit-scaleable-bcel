@@ -11,9 +11,11 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     const url = `${API_BASE_URL}${endpoint}`
 
-    const defaultHeaders: Record<string, string> = {
-      "Content-Type": "application/json",
-    }
+    // ถ้า body เป็น FormData ให้ปล่อย browser เซ็ต Content-Type เอง
+    const isFormData = options.body instanceof FormData
+    const defaultHeaders: Record<string, string> = isFormData
+      ? {}
+      : { "Content-Type": "application/json" }
 
     // เพิ่ม Authorization header ถ้ามี token
     if (browser) {
@@ -68,21 +70,36 @@ class ApiService {
   }
 
   // สร้างฟังก์ชันสำหรับเรียก API ต่างๆ
-  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: "GET" })
+  async get<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: "GET", ...options })
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(
+    endpoint: string,
+    data?: any,
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    const isForm = typeof FormData !== "undefined" && data instanceof FormData
     return this.request<T>(endpoint, {
       method: "POST",
-      body: data ? JSON.stringify(data) : undefined,
+      body: isForm ? data : data ? JSON.stringify(data) : undefined,
+      ...options,
     })
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(
+    endpoint: string,
+    data?: any,
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    const isForm = typeof FormData !== "undefined" && data instanceof FormData
     return this.request<T>(endpoint, {
       method: "PUT",
-      body: data ? JSON.stringify(data) : undefined,
+      body: isForm ? data : data ? JSON.stringify(data) : undefined,
+      ...options,
     })
   }
 

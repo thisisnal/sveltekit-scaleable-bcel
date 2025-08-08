@@ -106,7 +106,7 @@
 
   <!-- Right Column - Login Form -->
   <div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-50">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-xl">
       <!-- Back to Home Link -->
       <div class="mb-8">
         <a
@@ -138,114 +138,123 @@
         </div>
 
         <form method="POST" on:submit={handleSubmit} class="space-y-6">
-          <!-- Full Name -->
-          <div>
-            <label
-              for="fullname"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              ชื่อ-นามสกุล
-            </label>
-            <input
-              type="text"
-              id="fullname"
-              name="fullname"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณากรอกชื่อ-นามสกุล"
-            />
+          <!-- Row 1: Full Name and Username -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Full Name -->
+            <div>
+              <label
+                for="fullname"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                ชื่อ-นามสกุล
+              </label>
+              <input
+                type="text"
+                id="fullname"
+                name="fullname"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณากรอกชื่อ-นามสกุล"
+              />
+            </div>
+
+            <!-- Username -->
+            <div>
+              <label
+                for="username"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                ชื่อผู้ใช้
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณากรอกชื่อผู้ใช้"
+              />
+            </div>
           </div>
 
-          <!-- Username -->
-          <div>
-            <label
-              for="username"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              ชื่อผู้ใช้
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณากรอกชื่อผู้ใช้"
-            />
+          <!-- Row 2: Email and Telephone -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Email -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                อีเมล
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณากรอกอีเมล"
+              />
+            </div>
+
+            <!-- Telephone -->
+            <div>
+              <label
+                for="tel"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                เบอร์โทรศัพท์
+              </label>
+              <input
+                type="tel"
+                id="tel"
+                name="tel"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณากรอกเบอร์โทรศัพท์"
+              />
+            </div>
           </div>
 
-          <!-- Email -->
-          <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              อีเมล
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณากรอกอีเมล"
-            />
-          </div>
+          <!-- Row 3: Password and Password Confirmation -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Password -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                รหัสผ่าน
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                minlength="6"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณากรอกรหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
+              />
+            </div>
 
-          <!-- Telephone -->
-          <div>
-            <label
-              for="tel"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              เบอร์โทรศัพท์
-            </label>
-            <input
-              type="tel"
-              id="tel"
-              name="tel"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณากรอกเบอร์โทรศัพท์"
-            />
-          </div>
-
-          <!-- Password -->
-          <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              รหัสผ่าน
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              minlength="6"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณากรอกรหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
-            />
-          </div>
-
-          <!-- Password Confirmation -->
-          <div>
-            <label
-              for="password_confirmation"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              ยืนยันรหัสผ่าน
-            </label>
-            <input
-              type="password"
-              id="password_confirmation"
-              name="password_confirmation"
-              required
-              minlength="6"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-              placeholder="กรุณายืนยันรหัสผ่าน"
-            />
+            <!-- Password Confirmation -->
+            <div>
+              <label
+                for="password_confirmation"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                ยืนยันรหัสผ่าน
+              </label>
+              <input
+                type="password"
+                id="password_confirmation"
+                name="password_confirmation"
+                required
+                minlength="6"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                placeholder="กรุณายืนยันรหัสผ่าน"
+              />
+            </div>
           </div>
 
           <!-- Terms and Conditions -->

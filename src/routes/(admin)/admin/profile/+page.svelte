@@ -1,9 +1,8 @@
 <script lang="ts">
-  import Setting from "$features/admin/components/Setting.svelte"
+  import Profile from "$features/admin/components/Profile.svelte"
 
-  const title = "System Settings - SvelteKit Scaleable App"
-  const description =
-    "ปรับแต่งค่าพื้นฐาน ความปลอดภัย การแจ้งเตือน และธีมของระบบ"
+  const title = "User Profile - SvelteKit Scaleable App"
+  const description = "ดูและแก้ไขข้อมูลส่วนตัว ความปลอดภัย และกิจกรรมล่าสุด"
 </script>
 
 <svelte:head>
@@ -15,4 +14,4 @@
   <meta name="og:description" content={description} />
 </svelte:head>
 
-<Setting />
+<Profile />

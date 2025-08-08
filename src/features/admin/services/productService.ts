@@ -3,7 +3,7 @@ import type { Product, ProductResponse } from "$lib/types/product"
 
 class ProductService {
   // Fetch all products with optional filters
-  async getProducts(page = 1, search = "", limit = 10) {
+  async getProducts(page = 1, search = "", limit = 10, signal?: AbortSignal) {
     try {
       let endpoint = `/products?page=${page}&limit=${limit}`
 
@@ -12,7 +12,9 @@ class ProductService {
       }
 
       console.log("ProductService: Making API call to", endpoint)
-      const response = await apiService.get<ProductResponse>(endpoint)
+      const response = await apiService.get<ProductResponse>(endpoint, {
+        signal,
+      })
       console.log("ProductService: API response", response)
 
       if (response.success) {
@@ -38,12 +40,12 @@ class ProductService {
   }
 
   // Get single product by ID
-  async getProduct(id: number) {
+  async getProduct(id: number, signal?: AbortSignal) {
     try {
       const response = await apiService.get<{
         status: boolean
         product: Product
-      }>(`/products/${id}`)
+      }>(`/products/${id}`, { signal })
       return response.data
     } catch (error) {
       console.error("Error fetching product:", error)
@@ -52,7 +54,7 @@ class ProductService {
   }
 
   // Create new product
-  async createProduct(productData: Partial<Product>) {
+  async createProduct(productData: Partial<Product> | FormData) {
     try {
       const response = await apiService.post<{
         status: boolean
@@ -66,8 +68,17 @@ class ProductService {
   }
 
   // Update product
-  async updateProduct(id: number, productData: Partial<Product>) {
+  async updateProduct(id: number, productData: Partial<Product> | FormData) {
     try {
+      // ถ้าเป็น FormData ให้ใช้ method override เพื่อรองรับ multipart/form-data
+      if (typeof FormData !== "undefined" && productData instanceof FormData) {
+        if (!productData.has("_method")) productData.append("_method", "PUT")
+        const response = await apiService.post<{
+          status: boolean
+          product: Product
+        }>(`/products/${id}`, productData)
+        return response.data
+      }
       const response = await apiService.put<{
         status: boolean
         product: Product

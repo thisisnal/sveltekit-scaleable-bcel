@@ -6,7 +6,7 @@
 
 <div class="min-h-screen flex flex-col">
   <Navbar />
-  <main class="flex-1 container mx-auto p-4">
+  <main class="flex-1">
     {@render children?.()}
   </main>
   <Footer />

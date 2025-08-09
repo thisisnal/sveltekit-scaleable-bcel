@@ -9,17 +9,17 @@
     { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
     { href: "/admin/products", label: "Products", icon: "🛒" },
     { href: "/admin/users", label: "Users", icon: "👥" },
+    { href: "/admin/userstanstack", label: "UsersTanstack", icon: "👥" },
+    { href: "/admin/members", label: "Members", icon: "👥" },
     { href: "/admin/settings", label: "Settings", icon: "⚙️" },
   ]
 
   function isActive(href: string): boolean {
+    const path = page.url.pathname
     if (href === "/admin" || href === "/admin/dashboard") {
-      return (
-        page.url.pathname === "/admin" ||
-        page.url.pathname.startsWith("/admin/dashboard")
-      )
+      return path === "/admin" || path === "/admin/dashboard"
     }
-    return page.url.pathname.startsWith(href)
+    return path === href || path.startsWith(href + "/")
   }
 </script>
 

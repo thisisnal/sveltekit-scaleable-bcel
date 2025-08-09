@@ -1,0 +1,16 @@
+# .github/workflows/e2e.yml
+name: e2e
+on: [push, pull_request]
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npm run test:e2e
+      - if: failure()
+        run: npm run test:e2e:report
